@@ -1,0 +1,38 @@
+<form class="form-horizontal">
+  <fieldset>
+  <legend>New Columbarium Record</legend>
+  
+  <!-- Display Person to be Added -->
+  <div class="form-group">
+      <label class="col-md-4 control-label">Record</label>
+      <div class="col-md-4">
+          <div class="form-control">{person}</div>
+      </div>
+  </div>
+
+  <!-- Enter Certificate Number -->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="textinput">Certificate</label>  
+    <div class="col-md-4">
+    <input id="textinput" name="Certificate" type="text" 
+      placeholder="Enter Certificate number" class="form-control input-md">
+    <span class="help-block">Next Available Certificate = <b>{next}</b>{last}</span>  
+    </div>
+  </div>
+  
+  <!-- Press Create -->
+  <div class="form-group">
+    <label class="col-md-4 control-label"></label>
+    <div class="col-md-4">
+      <button class="btn btn-primary postOperation">
+          Create
+      </button>
+    </div>
+  </div>
+
+        <input type='hidden' name='p1' value='add' />
+        <input type='hidden' name='p2' value='{peopleid}' />
+        <input type='hidden' name='pyscript' value='{scriptname}' />
+  </fieldset>
+</form>
+    
