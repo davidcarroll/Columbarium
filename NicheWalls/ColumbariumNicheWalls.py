@@ -9,9 +9,9 @@ def Start():
     keyword = "Columbarium"
     if model.IsDebug:
         base = "c:/dev/columbarium/"
-        docName = base + "data/%s.json" % docName
-        styleName = base + "Walls/%s.text.html" % styleName
-        lookupNicheDataSqlName = base + "Walls/%s.sql" % lookupNicheDataSqlName
+        docName = base + "Data/%s.json" % docName
+        styleName = base + "NicheWalls/%s.text.html" % styleName
+        lookupNicheDataSqlName = base + "NicheWalls/%s.sql" % lookupNicheDataSqlName
         mainScriptName = "c!dev-columbarium-Record-%s.py-kw-Columbarium" % mainScriptName
     data.doc = model.DynamicDataFromJson(model.Content(docName, keyword))
     style = model.Content(styleName, keyword)
@@ -34,8 +34,8 @@ def LookupData(nicheid, data):
     return next((i for i in data.lookup if i.NicheId == nicheid), None)
 
 def PrintWall(wall, data):
-    print '<h2>{}</h2>'.format(wall.name)
-    print '<table class="table notwide niche">'
+    print '<h2 style="text-align:center">{}</h2>'.format(wall.name)
+    print '<table align="center" class="table notwide niche">'
     for row in data.doc.Rows:
         print '<tr>'
         for col in range(wall.start, wall.end + 1):

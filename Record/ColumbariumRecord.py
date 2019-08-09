@@ -13,7 +13,9 @@ def Initialize():
     data.addNewRecordFormName = 'ColumbariumFormNewRecord'
     data.javascriptName = 'ColumbariumRecordJavascript'
     data.htmlName = 'ColumbariumRecordHtml'
+    data.htmlRecordDeletedName = 'ColumbariumRecordDeleted'
     data.nextCertificateSqlName = 'ColumbariumRecordNextCertificate'
+    data.redirect = '/PyScriptForm/ColumbariumRecord/person/%s'
     keyword = "Columbarium"
     data.keyword = keyword
 
@@ -27,7 +29,9 @@ def Initialize():
         data.editFormName = base + "Record/%s.text.html" % data.editFormName
         data.javascriptName = base + "Record/%s.js" % data.javascriptName
         data.htmlName = base + 'Record/%s.text.html' % data.htmlName
+        data.htmlRecordDeletedName = base + 'Record/%s.text.html' % data.htmlRecordDeletedName
         data.nextCertificateSqlName = base + 'Record/%s.sql' % data.nextCertificateSqlName
+        data.redirect = '/PyScriptForm/c!dev-Columbarium-Record-ColumbariumRecord.py/person/%s'
         lookupDataSqlName = base + 'Record/%s.sql' % lookupDataSqlName
         displayFormName = base + "Record/%s.text.html" % displayFormName
         metaName = base + "Data/%s.json" % metaName
@@ -145,7 +149,7 @@ def UpdateNiches(newvalue, data):
     adds = newSet.difference(oldSet) # items in newSet not in oldSet
 
     for deleteniche in deletes:
-        index = ((i for i, o in enumerate(nichepeople) if o.PeopleId == peopleid and o.Niche == deleteniche), -1)
+        index = next((i for i, o in enumerate(nichepeople) if o.PeopleId == peopleid and o.Niche == deleteniche), -1)
         nichepeople.RemoveAt(index)
     for addniche in adds:
         if not addniche:
@@ -208,7 +212,7 @@ def UpdateRecord(data):
     UpdateNiches(post.Niches, data)
     UpdateInurnment(data)
     if CheckDelete(data):
-        return '<div class="alert alert-danger">Record Deleted</div>'
+        return model.Content(data.htmlRecordDeletedName, data.keyword)
 
     model.WriteContent(data.docName, str(data.doc)) # save the modified document
     lookupdata = LookupData(data) # call again to get refreshed data
@@ -235,8 +239,7 @@ def AddRecord(data):
     obj.Certificate = data.postdata.Certificate
     data.doc.ColumbariumPeople.Insert(0, obj)
     model.WriteContent(data.docName, str(data.doc))
-    lookupdata = LookupData(data)
-    return DisplayForm(lookupdata, data)
+    return "REDIRECT=" + data.redirect % data.id
 
 def ProcessHttpGet(data):
     model.Script = model.Content(data.javascriptName, data.keyword)

@@ -1,5 +1,5 @@
 data = model.DynamicData()
-base = "c:/dev/Columbarium/Conversion/ColumbariumBuildData"
+base = "c:/dev/Columbarium/Conversion/BuildData/ColumbariumBuildData"
 
 data.ColumbariumPeople = q.QuerySql(model.Content(base + "People.sql"))
 data.Inurnments = q.QuerySql(model.Content(base + "Inurnments.sql"))

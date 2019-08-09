@@ -6,3 +6,4 @@ drop view if exists custom.Niches
 drop view if exists custom.Inurnments
 drop view if exists custom.NichePeople
 drop view if exists custom.ColumbariumPeople
+EXEC master..xp_cmdshell 'del c:\dev\Columbarium\Data\*.json'

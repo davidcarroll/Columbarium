@@ -25,36 +25,51 @@ def Menu():
         rptCertificatesWithMultipleNichesSqlName = base.format(
             "Menu-%s.sql" % rptCertificatesWithMultipleNichesSqlName)
         nicheWallsScriptName = base.format(
-            "Walls-%s.py" % nicheWallsScriptName)
+            "NicheWalls-%s.py" % nicheWallsScriptName)
         mainScriptName = base.format(
             "Record-%s.py" % mainScriptName)
         buildDataScriptName = base.format(
-            "Conversion-%s.py" % buildDataScriptName)
+            "Conversion-BuildData-%s.py" % buildDataScriptName)
         buildMetaScriptName = base.format(
-            "Conversion-%s.py" % buildMetaScriptName)
+            "Conversion-BuildData-%s.py" % buildMetaScriptName)
         buildNicheScriptName = base.format(
-            "Conversion-%s.py" % buildNicheScriptName)
+            "Conversion-BuildData-%s.py" % buildNicheScriptName)
         createViewsScriptName = base.format(
-            "Conversion-%s.py" % createViewsScriptName)
+            "Conversion-BuildViews-%s.py" % createViewsScriptName)
         javascriptName = "c:/dev/columbarium/Menu/%s.js" % javascriptName
 
     javascript = model.Content(javascriptName, keyword)
     link = "<a href='/PyScriptForm/%s/person/{0}' target='link'><b>{1}</b>{2}{3}{4}</a>" % mainScriptName
     model.Script = javascript.replace("{link}", link)
 
-    print '''Search by Name or PeopleId: <input id="pythonSearch" type="text" autocomplete="off" 
-        style="width: 14em; font-size: 14px; padding: 5px;" class="form-control input-sm" />'''
-
-    print '<a href="/PyScript/%s" target="walls">Niche Walls</a><br>' % nicheWallsScriptName
-    print '<a href="/RunScript/%s" target="rpt">Columbarium Report</a><br>' % rptSqlName
-    print '<a href="/RunScript/%s" target="rpt">Unclaimed Empty Niches</a><br>' % rptUnclaimedNichesSqlName
-    print '<a href="/RunScript/%s" target="rpt">Unclaimed Half Niches</a><br>' % rptUnclaimedHalfNichesSqlName
-    print '<a href="/RunScript/%s" target="rpt">Certificates With Multiple Niches</a><br>' % rptCertificatesWithMultipleNichesSqlName
-
+    print '''
+    <div id="page-header" class="text-center"><h2>Columbarium Menu</h2></div>
+    <div class="container-fluid" id="main">
+        <div class="box-content">
+            <div class="well" style="max-width: 350px; margin: auto;">
+                Search by Name or PeopleId: <input id="pythonSearch" type="text" autocomplete="off" 
+                    style="width: 14em; font-size: 14px; padding: 5px;" class="form-control input-sm" /><br>
+                <a href="/PyScript/{}" target="walls">Niche Walls</a><br>
+                <a href="/RunScript/{}" target="rpt">Columbarium Report</a><br>
+                <a href="/RunScript/{}" target="rpt">Unclaimed Empty Niches</a><br>
+                <a href="/RunScript/{}" target="rpt">Unclaimed Half Niches</a><br>
+                <a href="/RunScript/{}" target="rpt">Certificates With Multiple Niches</a><br>
+    '''.format( nicheWallsScriptName, 
+                rptSqlName, 
+                rptUnclaimedNichesSqlName, 
+                rptUnclaimedHalfNichesSqlName, 
+                rptCertificatesWithMultipleNichesSqlName)
     if model.IsDebug:
-        print '<br>'
-        print '<a href="/PyScript/%s">Build Columbarium Data</a><br>' % buildDataScriptName
-        print '<a href="/PyScript/%s">Build Columbarium Meta Data</a><br>' % buildMetaScriptName
-        print '<a href="/PyScript/%s">Build Columbarium Niche Data</a><br>' % buildNicheScriptName
-        print '<a href="/PyScript/%s">Create Views</a><br>' % createViewsScriptName
+        print '''
+        <br>
+        <a href="/PyScript/{}">Build Columbarium Data</a><br>
+        <a href="/PyScript/{}">Build Columbarium Meta Data</a><br>
+        <a href="/PyScript/{}">Build Columbarium Niche Data</a><br>
+        <a href="/PyScript/{}">Create Views</a><br>
+        '''.format( buildDataScriptName,
+                    buildMetaScriptName,
+                    buildNicheScriptName,
+                    createViewsScriptName)
+    print '</div></div></div>'
+
 Menu()
