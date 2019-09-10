@@ -1,0 +1,33 @@
+{
+  "ColumbariumPeople": [
+    {
+      "PeopleId": 2,
+      "Certificate": 101,
+      "Notation": "",
+      "Spots": "",
+      "AmtPaid": "",
+      "PurchasedBy": "",
+      "Notes": "",
+      "ContactName": "",
+      "ContactPhoneNo": "",
+      "ContactRelation": "",
+      "RefersTo": ""
+    }
+  ],
+  "Inurnments": [
+    {
+      "PeopleId": 2,
+      "Niche": "A-1-a",
+      "OfficiatedBy": "Pastor Bob",
+      "InurnmentDate": "7/7/2019"
+    }
+  ],
+  "NichePeople": [
+    {
+      "NicheId": "A-1",
+      "NichePart": "a",
+      "PeopleId": 2,
+      "Niche": "A-1-a"
+    }
+  ]
+}
