@@ -8,7 +8,7 @@ def WriteContent(w, base, name, typ):
 def WriteView(w, base, name):
     f = open('{}{}.sql'.format(base, name), 'r')
     text = f.read()
-    w.write('model.CreateCustomView("{}", """\n{}\n""")\n'.format(name, text))
+    w.write('model.CreateCustomView("Columbarium{}", """\n{}\n""")\n'.format(name, text))
 
 def Type(typ):
     if typ == 'sql':
@@ -22,54 +22,50 @@ def Type(typ):
     if typ == 'text.html':
         return 'Text'
 
-def WriteMenuContent(w):
-    base = 'C:/dev/columbarium/menu/'
-    WriteContent(w, base, 'ColumbariumMenu', 'py')
-    WriteContent(w, base, 'ColumbariumRpt', 'sql')
-    WriteContent(w, base, 'ColumbariumRptCertificatesWithMultipleNiches', 'sql')
-    WriteContent(w, base, 'ColumbariumRptUnclaimedNiches', 'sql')
-    WriteContent(w, base, 'ColumbariumRptUnclaimedHalfNiches', 'sql')
-    WriteContent(w, base, 'PeopleSearchJavascript', 'js')
+def WritePythonScripts(w):
+    base = 'C:/dev/columbarium/PythonScripts/'
     WriteContent(w, base, 'ColumbariumBuildNicheData', 'py')
+    WriteContent(w, base, 'ColumbariumMenu', 'py')
+    WriteContent(w, base, 'ColumbariumjNicheWalls', 'py')
+    WriteContent(w, base, 'ColumbariumRecord', 'py')
 
-def WriteNicheWallsContent(w):
-    base = 'C:/dev/columbarium/nichewalls/'
-    WriteContent(w, base, 'ColumbariumNicheLookupData', 'sql')
-    WriteContent(w, base, 'ColumbariumNicheStyle', 'text.html')
-    WriteContent(w, base, 'ColumbariumNicheWalls', 'py')
+def WriteReports(w)
+    base = 'C:/dev/columbarium/Reports/'
+    WriteContent(w, base, 'ColumbariumCertificatesWithMultipleNiches, 'sql')
+    WriteContent(w, base, 'ColumbariumRpt', 'sql')
+    WriteContent(w, base, 'ColumbariumUnclaimedHalfNiches', 'sql')
+    WriteContent(w, base, 'ColumbariumUnclaimedNiches', 'sql')
 
-def WriteRecordContent(w):
-    base = 'C:/dev/columbarium/record/'
+def WriteHtml(w)
+    base = 'C:/dev/columbarium/Html/'
     WriteContent(w, base, 'ColumbariumFormDisplay', 'text.html')
     WriteContent(w, base, 'ColumbariumFormEdit', 'text.html')
     WriteContent(w, base, 'ColumbariumFormNewRecord', 'text.html')
-    WriteContent(w, base, 'ColumbariumRecord', 'py')
+    WriteContent(w, base, 'ColumbariumNicheStyle', 'text.html')
     WriteContent(w, base, 'ColumbariumRecordDeleted', 'text.html')
     WriteContent(w, base, 'ColumbariumRecordHtml', 'text.html')
     WriteContent(w, base, 'ColumbariumRecordJavascript', 'js')
-    WriteContent(w, base, 'ColumbariumRecordLookupData', 'sql')
-    WriteContent(w, base, 'ColumbariumRecordNextCertificate', 'sql')
+    WriteContent(w, base, 'PeopleSearchJavascript', 'js')
 
 def WriteViews(w):
-    base = 'C:/dev/columbarium/conversion/buildviews/ColumbariumBuildViews'
+    base = 'C:/dev/columbarium/Views/'
     WriteView(w, base, 'Inurnments')
+    WriteView(w, base, 'Lookup')
+    WriteView(w, base, 'LookupNiche')
+    WriteView(w, base, 'NextCertificate')
     WriteView(w, base, 'NichePeople')
     WriteView(w, base, 'Niches')
-    WriteView(w, base, 'ColumbariumPeople')
+    WriteView(w, base, 'People')
+
+def WriteData():
+    w = open('c:\dev\columbarium\installdata.py', 'w')
+    base = 'C:/dev/columbarium/Conversion/BuildData/'
+    WriteContent(w, base, 'ColumbariumMetaData', 'json')
 
 def WriteDataContent():
-    w = open('c:\dev\columbarium\installdata.py', 'w')
     base = 'C:/dev/columbarium/data/'
     WriteContent(w, base, 'ColumbariumData', 'json')
-    WriteContent(w, base, 'ColumbariumDataMeta', 'json')
     WriteContent(w, base, 'ColumbariumNicheData', 'json')
-
-def WriteTestDataContent():
-    w = open('c:\dev\columbarium\installtestdata.py', 'w')
-    base = 'C:/dev/columbarium/Data/test'
-    WriteContent(w, base, 'ColumbariumData', 'json')
-    WriteContent(w, base, 'ColumbariumDataMeta', 'json')
-    WriteContent(w, base, 'ColumbariumBuildNicheData', 'py')
 
 w = open('c:\dev\columbarium\installscripts.py', 'w')
 

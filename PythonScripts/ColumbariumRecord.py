@@ -36,14 +36,15 @@ def Initialize():
 
     data.meta = model.DynamicDataFromJson(model.Content(metaName))
     data.displayForm = model.Content(displayFormName, keyword)
+    data.htmlRecordDeleted = model.Content(data.htmlRecordDeletedName, keyword)
 
     lookupDataSql = "select * from custom.ColumbariumLookup"
     data.lookupDataSqlFromCertificate = lookupDataSql + " where Certificate = %s"
     data.lookupDataSqlFromPeopleId = lookupDataSql + " where PeopleId = %s"
-    data.lookupDataSqlFromNiche = lookupDataSql + ''' 
-        where exists(
-            select null from custom.ColumbariumNichePeople 
-            where PeopleId = PeopleId and NicheId = '%s')
+    data.lookupDataSqlFromNiche = ''' 
+        select lu.* from custom.ColumbariumLookup lu
+        join custom.ColumbariumNichePeople np on np.PeopleId = lu.PeopleId
+        where np.NicheId = '%s'
     '''
     data.lookupNichesByPeopleId = "select NicheId from custom.ColumbariumLookupNiche where PeopleId = %s"
     data.lookupInurnmentByPeopleId = "select * from custom.ColumbariumInurnments where PeopleId = %s"
@@ -65,8 +66,7 @@ def DisplayForm(lookupdata, data):
     person.Niches = lookupdata.Niches
     person.InurnmentDate = lookupdata.InurnmentDate
     person.OfficiatedBy = lookupdata.OfficiatedBy
-    icon = data.urnicon if person.InurnmentDate or person.OfficiatedBy else ''
-    personLink = '<a href="/Person2/{}">{}</a> {}'.format(peopleid, lookupdata.Name, icon)
+    personLink = PersonLink(data, lookupdata)
     rows = model.BuildDisplayRows(person, data.meta)
     if rows == None:
         return "not found"
@@ -75,6 +75,11 @@ def DisplayForm(lookupdata, data):
         r = rows, 
         pid = peopleid, 
         scriptname = data.pyscript)
+
+def PersonLink(data, lookupdata):
+    record = lookupdata.Json
+    icon = data.urnicon if record.InurnmentDate or record.OfficiatedBy else ''
+    return '<a href="/Person2/{}" target="person">{}</a> {}'.format(data.id, lookupdata.Name, icon)
 
 def LookupByPeopleId(peopleid):
     sql = data.lookupDataSqlFromPeopleId % peopleid
@@ -86,7 +91,7 @@ def LookupByCertificate(certificate):
     sql = data.lookupDataSqlFromCertificate % certificate
     return model.SqlListDynamicData(sql, data.meta)
 def LookupByNiche(nicheid):
-    sql = data.lookupDataSqlFromNiche % nichid
+    sql = data.lookupDataSqlFromNiche % nicheid
     return model.SqlListDynamicData(sql, data.meta)
 def LookupNichesByPeopleId(peopleid):
     sql = data.lookupNichesByPeopleId % peopleid
@@ -133,7 +138,9 @@ def EditForm(data):
     if rows == None:
         return ""
     editForm = model.Content(data.editFormName, data.keyword)
+    personLink = PersonLink(data, lookupdata)
     return editForm.format(
+        p = personLink,
         r = rows,
         p2 = data.id,
         scriptname = data.pyscript)
@@ -142,8 +149,8 @@ def UpdateNiches(data, lookupdata):
     oldvalue = lookupdata.Niches
     newvalue = data.post.Niches
     # before and after lists of Niches
-    oldList = oldvalue.replace(' ','').split(',')
-    newList = newvalue.replace(' ','').split(',')
+    oldList = filter(None, oldvalue.replace(' ','').split(','))
+    newList = filter(None, newvalue.replace(' ','').split(','))
     # use Python sets for comparing lists to get deletes and adds
     oldSet = set(oldList)
     newSet = set(newList) if newvalue else set()
@@ -156,12 +163,8 @@ def UpdateNiches(data, lookupdata):
         nicheid = GetNicheId(nicheid2)
         model.DeleteJsonRecord(data.NicheSection, data.id, nicheid, nicheid2)
     for nicheid2 in adds:
-        if not nicheid2:
-            continue
-        obj = model.DynamicData()
-        obj.Niche = nicheid2
         nicheid = GetNicheId(nicheid2)
-        model.AddUpdateJsonRecord(obj, data.NicheSection, data.id, nicheid, nicheid2)
+        model.AddUpdateJsonRecord('', data.NicheSection, data.id, nicheid, nicheid2)
 
 def GetNicheId(nicheid2):
     x = nicheid2.split('-')
@@ -195,7 +198,7 @@ def CheckDelete(data):
 def UpdateRecord(data):
     lookupdata = LookupData(data)
     if lookupdata == None:
-        return None
+        return data.htmlRecordDeleted
     record = lookupdata.Json
 
     # update all the standard ColumbariumPeople properties
@@ -210,7 +213,7 @@ def UpdateRecord(data):
     UpdateNiches(data, lookupdata)
     UpdateInurnment(data, lookupdata)
     if CheckDelete(data):
-        return model.Content(data.htmlRecordDeletedName, data.keyword)
+        return data.htmlRecordDeleted
 
     model.AddUpdateJsonRecord(record, "ColumbariumPeople", data.id)
     lookupdata = LookupData(data) # call again to get refreshed data
@@ -240,25 +243,26 @@ def AddRecord(data):
 
 def ProcessHttpGet(data):
     model.Script = model.Content(data.javascriptName, data.keyword)
-    html = model.Content(data.htmlName, data.keyword)
+    container = model.Content(data.htmlName, data.keyword)
+    html = ""
     lookuplist = LookupData(data)
     if lookuplist == None:
         AddRecordForm(data)
     for info in lookuplist:
         form = DisplayForm(info, data)
         html += '\n<div class="columbarium">\n%s\n</div>\n' % form
-    model.Form = html
+    model.Form = container.replace("<!--INDIVIDUAL FORMS-->", html)
 
 def ProcessHttpPost(data):
     if data.operationType == "add":
-        print AddRecord(data)
+        print(AddRecord(data))
     elif data.operationType == "edit":
-        print EditForm(data)
+       print(EditForm(data)) 
     elif data.operationType == "update":
-        print UpdateRecord(data)
+        print(UpdateRecord(data))
     elif data.operationType == "cancel":
         info = LookupData(data)
-        print DisplayForm(info, data)
+        print(DisplayForm(info, data))
 
 if model.HttpMethod == 'get':
     data = Initialize()
