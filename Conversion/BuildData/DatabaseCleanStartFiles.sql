@@ -15,5 +15,3 @@ DROP view if exists [custom].[ColumbariumInurnments]
 DROP VIEW if exists [custom].[ColumbariumNextCertificate]
 DROP view if exists [custom].[ColumbariumNichePeople]
 DROP VIEW if exists [custom].[ColumbariumNiches]
-
-delete custom.JsonDocumentRecords where Section like 'Columbarium%'

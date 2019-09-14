@@ -11,5 +11,5 @@
   "RefersTo": "int",
   "Niches": "special str",
   "InurnmentDate": "special str",
-  "OfficiatedBy": "special str"  
+  "OfficiatedBy": "special str" 
 }

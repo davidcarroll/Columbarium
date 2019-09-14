@@ -22,17 +22,17 @@ def Initialize():
     displayFormName = 'ColumbariumFormDisplay'
     metaName = 'ColumbariumMetaData'
 
-    if model.IsDebug:
-        base = "c:/dev/columbarium/"
-        data.addNewRecordFormName = base + "Html/%s.text.html" % data.addNewRecordFormName
-        data.editFormName = base + "Html/%s.text.html" % data.editFormName
-        data.javascriptName = base + "Html/%s.js" % data.javascriptName
-        data.htmlName = base + 'Html/%s.text.html' % data.htmlName
-        data.htmlRecordDeletedName = base + 'Html/%s.text.html' % data.htmlRecordDeletedName
-        data.nextCertificateSqlName = base + 'Reports/%s.sql' % data.nextCertificateSqlName
-        data.redirect = '/PyScriptForm/c!dev-Columbarium-PythonScripts-ColumbariumRecord.py/person/%s'
-        displayFormName = base + "Html/%s.text.html" % displayFormName
-        metaName = base + "Conversion/BuildData/%s.json" % metaName
+    # if model.IsDebug:
+    #     base = "c:/dev/columbarium/"
+    #     data.addNewRecordFormName = base + "Html/%s.text.html" % data.addNewRecordFormName
+    #     data.editFormName = base + "Html/%s.text.html" % data.editFormName
+    #     data.javascriptName = base + "Html/%s.js" % data.javascriptName
+    #     data.htmlName = base + 'Html/%s.text.html' % data.htmlName
+    #     data.htmlRecordDeletedName = base + 'Html/%s.text.html' % data.htmlRecordDeletedName
+    #     data.nextCertificateSqlName = base + 'Reports/%s.sql' % data.nextCertificateSqlName
+    #     data.redirect = '/PyScriptForm/c!dev-Columbarium-PythonScripts-ColumbariumRecord.py/person/%s'
+    #     displayFormName = base + "Html/%s.text.html" % displayFormName
+    #     metaName = base + "Conversion/BuildData/%s.json" % metaName
 
     data.meta = model.DynamicDataFromJson(model.Content(metaName))
     data.displayForm = model.Content(displayFormName, keyword)
