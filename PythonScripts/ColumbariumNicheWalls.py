@@ -1,21 +1,17 @@
-#Roles=Admin
+#Roles=Columbarium
 def Start():
     model.Title = "Columbarium Walls"
     data = model.DynamicData()
     docName = 'ColumbariumNicheData'
     styleName = "ColumbariumNicheStyle"
     mainScriptName = "ColumbariumRecord"
-    keyword = "Columbarium"
-    if model.IsDebug:
-        mainScriptName = "c!dev-columbarium-PythonScripts-%s.py-kw-Columbarium" % mainScriptName
-        styleName = "c:/dev/columbarium/html/%s.text.html" % styleName
-    data.doc = model.DynamicDataFromJson(model.Content(docName, keyword))
-    style = model.Content(styleName, keyword)
+    data.doc = model.DynamicDataFromJson(model.Content(docName))
+    style = model.Content(styleName)
     data.lookup = q.QuerySql("select * from custom.ColumbariumLookupNiche")
 
-    data.nicheLink = '<a href="/PyScriptForm/%s/niche/{0}" target="link">{0}</a>' % mainScriptName
+    data.nicheLink = '<a href="/PyScriptForm/%s/niche/{0}" target="link">{1}</a>' % mainScriptName
     certificateUrl = '/PyScriptForm/%s/certificate/{0}' % mainScriptName
-    data.certificateLink = '<br><span><small><a href="%s" target="link">COL&#8209;{0}</a></small></span>' % certificateUrl
+    data.certificateLink = '<br><span><small><a href="%s" target="link">{1}</a></small></span>' % certificateUrl
 
     print style
     print '<div><a href="/PyScript/ColumbariumMenu" target="ColumbariumMenu">Columbarium Menu</a></div>'
@@ -37,10 +33,14 @@ def PrintWall(wall, data):
             nicheid = "{}-{}".format(row,col)
             lookupdata = LookupData(nicheid, data)
             print '<td>'
+            legalniche = lookupdata.LegalNicheId
             cert = lookupdata.Certificate
-            nichelink = data.nicheLink.format(nicheid)
-            print nichelink if len(cert) > 0 else nicheid
-            certlink = data.certificateLink.format(cert)
+            legalcert = lookupdata.LegalCertificate
+            if legalcert:
+                legalcert = legalcert.replace('-', '&#8209;')
+            nichelink = data.nicheLink.format(nicheid, legalniche)
+            print nichelink if len(cert) > 0 else legalniche
+            certlink = data.certificateLink.format(cert, legalcert)
             print certlink if len(cert) > 0 else data.checkmarkIcon
             if lookupdata.InurnedCnt:
                 print '<br>'

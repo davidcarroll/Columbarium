@@ -1,4 +1,4 @@
-select * 
+select *, LegalNicheId = formatmessage('%s-%03i', [Row], Col)
 from openjson((select json_query(
 		(select Body from dbo.Content where Name = 'ColumbariumNicheData'),
 		 '$.Niches'))) 

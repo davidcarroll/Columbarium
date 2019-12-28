@@ -1,4 +1,5 @@
-select convert(int, Id1) as PeopleId, j.*
+select convert(int, Id1) as PeopleId, j.* 
+	,formatmessage('COL-%04s', j.Certificate) LegalCertificate
 from custom.JsonDocumentRecords
      cross apply openjson(Json) with (
 		 Spots nvarchar(100) 

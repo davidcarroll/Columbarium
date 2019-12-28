@@ -16,30 +16,6 @@ def Menu():
     javascriptName = "PeopleSearchJavascript"
     keyword = "Columbarium"
 
-    if model.IsDebug:
-        base = "c!dev-columbarium-{}-kw-" + keyword
-        rptSqlName = base.format(
-            "Menu-%s.sql" % rptSqlName)
-        rptUnclaimedNichesSqlName = base.format(
-            "Menu-%s.sql" % rptUnclaimedNichesSqlName)
-        rptUnclaimedHalfNichesSqlName = base.format(
-            "Menu-%s.sql" % rptUnclaimedHalfNichesSqlName)
-        rptCertificatesWithMultipleNichesSqlName = base.format(
-            "Menu-%s.sql" % rptCertificatesWithMultipleNichesSqlName)
-        nicheWallsScriptName = base.format(
-            "NicheWalls-%s.py" % nicheWallsScriptName)
-        mainScriptName = base.format(
-            "Record-%s.py" % mainScriptName)
-        buildDataScriptName = base.format(
-            "Conversion-BuildData-%s.py" % buildDataScriptName)
-        buildMetaScriptName = base.format(
-            "Conversion-BuildData-%s.py" % buildMetaScriptName)
-        buildNicheScriptName = base.format(
-            "Conversion-BuildData-%s.py" % buildNicheScriptName)
-        createViewsScriptName = base.format(
-            "Conversion-BuildViews-%s.py" % createViewsScriptName)
-        javascriptName = "c:/dev/columbarium/Menu/%s.js" % javascriptName
-
     javascript = model.Content(javascriptName, keyword)
     link = "<a href='/PyScriptForm/%s/person/{0}' target='link'><b>{1}</b>{2}{3}{4}</a>" % mainScriptName
     model.Script = javascript.replace("{link}", link)
@@ -63,15 +39,6 @@ def Menu():
                 rptUnclaimedHalfNichesSqlName, 
                 rptCertificatesWithMultipleNichesSqlName,
                 buildNicheScriptName)
-    if model.IsDebug:
-        print '''
-        <br>
-        <a href="/PyScript/{}">Build Columbarium Data</a><br>
-        <a href="/PyScript/{}">Build Columbarium Meta Data</a><br>
-        <a href="/PyScript/{}">Create Views</a><br>
-        '''.format( buildDataScriptName,
-                    buildMetaScriptName,
-                    createViewsScriptName)
     print '</div></div></div>'
 
 Menu()
@@ -233,12 +200,6 @@ def Start():
     nicheScriptName = 'ColumbariumNiche'
     mainScriptName = "ColumbariumRecord"
     keyword = "Columbarium"
-    if model.IsDebug:
-        base = "c:/dev/columbarium/"
-        docName = base + "Data/%s.json" % docName
-        styleName = base + "NicheWalls/%s.text.html" % styleName
-        lookupNicheDataSqlName = base + "NicheWalls/%s.sql" % lookupNicheDataSqlName
-        mainScriptName = "c!dev-columbarium-Record-%s.py-kw-Columbarium" % mainScriptName
     data.doc = model.DynamicDataFromJson(model.Content(docName, keyword))
     style = model.Content(styleName, keyword)
     lookupNicheDataSql = model.Content(lookupNicheDataSqlName, keyword)
@@ -398,20 +359,6 @@ def Initialize():
     displayFormName = 'ColumbariumFormDisplay'
     metaName = 'ColumbariumDataMeta'
     lookupDataSqlName = 'ColumbariumRecordLookupData'
-
-    if model.IsDebug:
-        base = "c:/dev/columbarium/"
-        data.addNewRecordFormName = base + "Record/%s.text.html" % data.addNewRecordFormName
-        data.editFormName = base + "Record/%s.text.html" % data.editFormName
-        data.javascriptName = base + "Record/%s.js" % data.javascriptName
-        data.htmlName = base + 'Record/%s.text.html' % data.htmlName
-        data.htmlRecordDeletedName = base + 'Record/%s.text.html' % data.htmlRecordDeletedName
-        data.nextCertificateSqlName = base + 'Record/%s.sql' % data.nextCertificateSqlName
-        data.redirect = '/PyScriptForm/c!dev-Columbarium-Record-ColumbariumRecord.py/person/%s'
-        lookupDataSqlName = base + 'Record/%s.sql' % lookupDataSqlName
-        displayFormName = base + "Record/%s.text.html" % displayFormName
-        metaName = base + "Data/%s.json" % metaName
-        data.docName = base + "Data/%s.json" % data.docName
 
     data.doc = model.DynamicDataFromJson(model.Content(data.docName))
     data.meta = model.DynamicDataFromJson(model.Content(metaName))

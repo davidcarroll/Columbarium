@@ -1,10 +1,18 @@
 select 
      j.Id1 PeopleId
      ,p.Name
-	 ,cp.Certificate
+	,cp.Certificate
+	,cp.LegalCertificate
      ,j.Json
      ,Niches = isnull(stuff((
-          select ', ' + NicheId2
+          select ', ' + np.NicheId2
+               from custom.ColumbariumNichePeople np
+               join custom.ColumbariumNiches n on n.NicheId = np.NicheId
+               where PeopleId = j.Id1
+               order by n.Wall, n.Row, n.Col, np.NicheId2
+               for xml path('')), 1, 2, ''), '')
+     ,LegalNicheIds = isnull(stuff((
+          select ', ' + np.LegalNicheId 
                from custom.ColumbariumNichePeople np
                join custom.ColumbariumNiches n on n.NicheId = np.NicheId
                where PeopleId = j.Id1

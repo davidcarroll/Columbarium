@@ -1,4 +1,12 @@
-#Roles=Admin
+#Roles=Columbarium
+model.UsesCustomView("ColumbariumNiches")
+model.UsesCustomView("ColumbariumInurnments")
+model.UsesCustomView("ColumbariumPeople")
+model.UsesCustomView("ColumbariumNichePeople")
+model.UsesCustomView("ColumbariumLookupNiche")
+model.UsesCustomView("ColumbariumLookup")
+model.UsesCustomView("ColumbariumNextCertificate")
+
 def Menu():
     model.Title = "Columbarium Menu"
     rptSqlName = "ColumbariumRpt"
@@ -9,26 +17,8 @@ def Menu():
     nicheWallsScriptName = "ColumbariumNicheWalls"
     mainScriptName = "ColumbariumRecord"
     javascriptName = "PeopleSearchJavascript"
-    keyword = "Columbarium"
 
-    if model.IsDebug:
-        base = "c!dev-columbarium-{}-kw-" + keyword
-        rptSqlName = base.format(
-            "Reports-%s.sql" % rptSqlName)
-        rptUnclaimedNichesSqlName = base.format(
-            "Reports-%s.sql" % rptUnclaimedNichesSqlName)
-        rptUnclaimedHalfNichesSqlName = base.format(
-            "Reports-%s.sql" % rptUnclaimedHalfNichesSqlName)
-        rptCertificatesWithMultipleNichesSqlName = base.format(
-            "Reports-%s.sql" % rptCertificatesWithMultipleNichesSqlName)
-        nicheWallsScriptName = base.format(
-            "PythonScripts-%s.py" % nicheWallsScriptName)
-        mainScriptName = base.format(
-            "PythonScripts-%s.py" % mainScriptName)
-        buildNicheScriptName = "ColumbariumBuildNicheData"
-        javascriptName = "c:/dev/columbarium/Html/%s.js" % javascriptName
-
-    javascript = model.Content(javascriptName, keyword)
+    javascript = model.Content(javascriptName)
     link = "<a href='/PyScriptForm/%s/person/{0}' target='link'><b>{1}</b>{2}{3}{4}</a>" % mainScriptName
     model.Script = javascript.replace("{link}", link)
 

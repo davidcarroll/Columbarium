@@ -1,6 +1,3 @@
-'''
-http://localhost:8888/PyScript/c!dev-columbarium-Conversion-BuildData-BuildData.py-kw-Columbarium
-'''
 keyword = 'Columbarium'
 installdata = 'c:\dev\columbarium\installdata.py'
 model.DeleteFile(installdata)

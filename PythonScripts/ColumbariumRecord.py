@@ -1,4 +1,4 @@
-#Roles=Admin
+#Roles=Columbarium
 
 def Initialize():
     model.Title = "Columbarium Record"
@@ -13,8 +13,6 @@ def Initialize():
     data.htmlRecordDeletedName = 'ColumbariumRecordDeleted'
     data.nextCertificateSqlName = 'ColumbariumRecordNextCertificate'
     data.redirect = '/PyScriptForm/ColumbariumRecord/person/%s'
-    keyword = "Columbarium"
-    data.keyword = keyword
     data.NicheSection = "ColumbariumNichePeople"
     data.PeopleSection = "ColumbariumPeople"
     data.InurnmentSection = "ColumbariumInurnments"
@@ -22,21 +20,9 @@ def Initialize():
     displayFormName = 'ColumbariumFormDisplay'
     metaName = 'ColumbariumMetaData'
 
-    # if model.IsDebug:
-    #     base = "c:/dev/columbarium/"
-    #     data.addNewRecordFormName = base + "Html/%s.text.html" % data.addNewRecordFormName
-    #     data.editFormName = base + "Html/%s.text.html" % data.editFormName
-    #     data.javascriptName = base + "Html/%s.js" % data.javascriptName
-    #     data.htmlName = base + 'Html/%s.text.html' % data.htmlName
-    #     data.htmlRecordDeletedName = base + 'Html/%s.text.html' % data.htmlRecordDeletedName
-    #     data.nextCertificateSqlName = base + 'Reports/%s.sql' % data.nextCertificateSqlName
-    #     data.redirect = '/PyScriptForm/c!dev-Columbarium-PythonScripts-ColumbariumRecord.py/person/%s'
-    #     displayFormName = base + "Html/%s.text.html" % displayFormName
-    #     metaName = base + "Conversion/BuildData/%s.json" % metaName
-
     data.meta = model.DynamicDataFromJson(model.Content(metaName))
-    data.displayForm = model.Content(displayFormName, keyword)
-    data.htmlRecordDeleted = model.Content(data.htmlRecordDeletedName, keyword)
+    data.displayForm = model.Content(displayFormName)
+    data.htmlRecordDeleted = model.Content(data.htmlRecordDeletedName)
 
     lookupDataSql = "select * from custom.ColumbariumLookup"
     data.lookupDataSqlFromCertificate = lookupDataSql + " where Certificate = %s"
@@ -63,7 +49,8 @@ def DisplayForm(lookupdata, data):
         # display a form for creating a new record
         return AddRecordForm(data)
     # add supplemental data that will be specially parsed during update
-    person.Niches = lookupdata.Niches
+    person.Certificate = lookupdata.LegalCertificate
+    person.Niches = lookupdata.LegalNicheIds
     person.InurnmentDate = lookupdata.InurnmentDate
     person.OfficiatedBy = lookupdata.OfficiatedBy
     personLink = PersonLink(data, lookupdata)
@@ -130,6 +117,7 @@ def EditForm(data):
     # add three special properties to person
     # (not part of the ColumbariumPeople schema) and they will be updated with special code
     record.PeopleId = lookupdata.PeopleId
+    record.Certificate = lookupdata.Certificate
     record.Niches = lookupdata.Niches
     record.InurnmentDate = lookupdata.InurnmentDate
     record.OfficiatedBy = lookupdata.OfficiatedBy
@@ -137,7 +125,7 @@ def EditForm(data):
     rows = model.BuildFormRows(record, data.meta)
     if rows == None:
         return ""
-    editForm = model.Content(data.editFormName, data.keyword)
+    editForm = model.Content(data.editFormName)
     personLink = PersonLink(data, lookupdata)
     return editForm.format(
         p = personLink,
@@ -220,7 +208,7 @@ def UpdateRecord(data):
     return DisplayForm(lookupdata, data) # display the modified record
 
 def AddRecordForm(data):
-    addNewRecordForm = model.Content(data.addNewRecordFormName, data.keyword)
+    addNewRecordForm = model.Content(data.addNewRecordFormName)
     nextCertificate = q.QuerySqlInt("select NextAvailableCertificate from custom.ColumbariumNextCertificate")
     lastViewedCertificate = model.GetCacheVariable("LastViewedColumbariumCertificate")
     lastViewedCertificateHtml = ""
@@ -242,8 +230,8 @@ def AddRecord(data):
     return "REDIRECT=" + data.redirect % data.id
 
 def ProcessHttpGet(data):
-    model.Script = model.Content(data.javascriptName, data.keyword)
-    container = model.Content(data.htmlName, data.keyword)
+    model.Script = model.Content(data.javascriptName)
+    container = model.Content(data.htmlName)
     html = ""
     lookuplist = LookupData(data)
     if lookuplist == None:
