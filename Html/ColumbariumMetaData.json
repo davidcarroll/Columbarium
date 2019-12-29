@@ -7,7 +7,7 @@
   "ContactName": "str",
   "ContactPhoneNo": "str",
   "ContactRelation": "str",
-  "Certificate": "special str",
+  "Certificate": "str",
   "RefersTo": "int",
   "Niches": "special str",
   "InurnmentDate": "special str",

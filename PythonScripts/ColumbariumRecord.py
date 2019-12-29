@@ -135,7 +135,7 @@ def EditForm(data):
 
 def UpdateNiches(data, lookupdata):
     oldvalue = lookupdata.Niches
-    newvalue = data.post.Niches
+    newvalue = model.Replace(data.post.Niches, "-0*(\d*)", "-$1"); # eliminate leading zeros
     # before and after lists of Niches
     oldList = filter(None, oldvalue.replace(' ','').split(','))
     newList = filter(None, newvalue.replace(' ','').split(','))
@@ -192,8 +192,12 @@ def UpdateRecord(data):
     # update all the standard ColumbariumPeople properties
     for k in record.Keys(data.meta):
         # post[k] is the individual property passed in via HttpPost
-        if k == 'Certificate' and data.post[k] == '': # remove empty Certificate
-            record.Remove('Certificate')
+        if k == 'Certificate':
+            if data.post[k] == '': # remove empty Certificate
+                record.Remove('Certificate')
+            else:
+                certid = model.Replace(data.post[k], "COL-0*(\d*)", "$1") #remove COL-0* to leave just integer
+                record.SetValue(k, certid)
         else:
             record.SetValue(k, data.post[k])
 
